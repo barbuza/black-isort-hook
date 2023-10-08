@@ -4,6 +4,7 @@ import sys
 
 
 def read_file(filename: str) -> bytes:
+    """Read a file from the git index."""
     git = subprocess.run(
         ["git", "show", ":" + filename], check=True, capture_output=True
     )
@@ -11,6 +12,7 @@ def read_file(filename: str) -> bytes:
 
 
 def check_file(filename: str, code: bytes) -> tuple[str, list[str]]:
+    """Check a file for formatting errors."""
     sys.stderr.write(f"checking {filename}\n")
     errors = []
 
@@ -31,7 +33,8 @@ def check_file(filename: str, code: bytes) -> tuple[str, list[str]]:
     return filename, errors
 
 
-def main():
+def main() -> int:
+    """Check staged python files for formatting errors."""
     git = subprocess.run(
         ["git", "--no-pager", "diff", "--name-only", "--cached", "--", "*.py"],
         check=True,
@@ -53,7 +56,8 @@ def main():
     if errors:
         sys.stderr.write("pre-commit check failed 😰\n")
         for filename, failures in errors.items():
-            print("  {}: {}".format(filename, ", ".join(failures)))
+            sys.stderr.write("  {}: {}\n".format(filename, ", ".join(failures)))
         return 1
-    else:
-        sys.stderr.write("pre-commit check passed 🎉\n")
+
+    sys.stderr.write("pre-commit check passed 🎉\n")
+    return 0
