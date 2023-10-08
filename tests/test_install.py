@@ -4,6 +4,7 @@ import subprocess
 
 
 def test_install(tmp_path: pathlib.Path) -> None:
+    """Test that the install script installs the hook correctly."""
     start_dir = os.getcwd()
     try:
         os.chdir(tmp_path)

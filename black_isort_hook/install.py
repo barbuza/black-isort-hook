@@ -6,6 +6,7 @@ import sys
 
 
 def find_git_root() -> pathlib.Path:
+    """Find the root of the current git repository."""
     git = subprocess.run(
         ["git", "rev-parse", "--show-toplevel"],
         check=True,
@@ -15,7 +16,8 @@ def find_git_root() -> pathlib.Path:
     return pathlib.Path(git.stdout.strip())
 
 
-def main():
+def main() -> int:
+    """Install the pre-commit hook."""
     root = find_git_root()
     hook_path = root / ".git" / "hooks" / "pre-commit"
     hook_path.unlink(missing_ok=True)
@@ -27,5 +29,7 @@ def main():
         return 1
     hook_path.symlink_to(script_path)
     sys.stderr.write(
-        f"added symlink `{os.path.relpath(hook_path)}` to `{os.path.relpath(script_path)}` 🎉\n"
+        f"added symlink `{os.path.relpath(hook_path)}` to"
+        f"`{os.path.relpath(script_path)}` 🎉\n"
     )
+    return 0
