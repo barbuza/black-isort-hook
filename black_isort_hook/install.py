@@ -20,7 +20,14 @@ def main() -> int:
     """Install the pre-commit hook."""
     root = find_git_root()
     hook_path = root / ".git" / "hooks" / "pre-commit"
-    hook_path.unlink(missing_ok=True)
+    if hook_path.exists():
+        sys.stderr.write(
+            f"removing existing hook `{os.path.relpath(hook_path)}`\n"
+        )
+        confirm = input("are you sure? [y/N] ")
+        if confirm.lower() not in ("y", "yes"):
+            return 1
+        hook_path.unlink(missing_ok=True)
     script_path = shutil.which("black-isort-hook")
     if script_path is None:
         sys.stderr.write(
@@ -30,6 +37,6 @@ def main() -> int:
     hook_path.symlink_to(script_path)
     sys.stderr.write(
         f"added symlink `{os.path.relpath(hook_path)}` to"
-        f"`{os.path.relpath(script_path)}` 🎉\n"
+        f" `{os.path.relpath(script_path)}` 🎉\n"
     )
     return 0
