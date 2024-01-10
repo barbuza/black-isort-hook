@@ -1,4 +1,5 @@
 import concurrent.futures
+import os.path
 import subprocess
 import sys
 
@@ -41,8 +42,7 @@ def main() -> int:
         text=True,
         capture_output=True,
     )
-    staged_python_files = git.stdout.split()
-
+    staged_python_files = [x for x in git.stdout.split() if os.path.exists(x)]
     errors = {}
 
     with concurrent.futures.ThreadPoolExecutor() as executor:

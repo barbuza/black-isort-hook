@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "black-isort-hook"
-version = "0.1.1"
+version = "0.1.2"
 description = "A simple pre-commit hook to run black and isort on staged files"
 authors = ["Victor Kotseruba <barbuzaster@gmail.com>"]
 license = "MIT"
